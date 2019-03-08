@@ -1,0 +1,388 @@
+Comando Git
+
+Configurar um nome de usuário e um email para registrar quem está fazendo as alterações:
+	$ git config --global user.name "Guilherme"
+	$ git config --global user.email "gcosta@fcm.unicamp.br"
+
+Para consultar
+	$ git config --global user.name
+	$ git config --global user.email
+
+Ou
+	$ git config --global --list
+
+
+Criar um repositório(projeto) GIT, acesse a pasta que será o projeto e dê o seguinte comando:
+	$ git init
+
+Uma pasta ".git" será criada. Use o comando "git status" dentro desta pasta para saber mais.
+
+Como o comando "git status" podemos saber se existem arquivos que não estão rastreados.
+
+Para adicionar um arquivo para ser rastreado use "git add <nome_arquivo>" ou "git add --all"
+
+Fazendo Commint(Após fazer isso o arquivo já estar no repositório)
+	$ git commit -m "Vesionamento inicial"
+
+
+Vendo os histórico de atualizações:
+	$ git log
+
+Ver as alterações feitas. Pegue o id dos Commit's a serem comparados através do comando "git log" :
+	$ git diff 2b6e5871a510955a6d2c15f1127f6711adb39ddd 82d9d47beb80e8f462b657527101d9d2838f761a
+
+
+Log com mais opções - Mostra as ações realizadas nos arquivos ou pastas:
+	$ git log --stat
+
+
+Usando commits anteriores - voltando o conteúdo do arquivo do commits especificado:
+	$ git checkout 2b6e5871a510955a6d2c15f1127f6711adb39ddd
+
+Quando fizer isso o git cria uma nova Brench e retorna para o Commit indicado.
+Para retornarmos para a Brench Master realizamos o seguinte comando.
+	$ git checkout master
+
+
+Desfazer alterações em arquivos antes mesmo de ter feito commit ou seja, retorná-lo ao estado original:
+	$ git checkout <nome_do_arquivo>
+
+Desfazer alterações em todos os arquivos modificados(só funciona para arquivos mapeado pelo git):
+	$ git reset --hard
+
+
+Para apagar arquivos que não estão rastreados pelo GIT:
+consulta os arquivos: $ git clean -n
+Apagando os arquivos: $ git clean -f
+Selecionando arquivo que quer apagar: $ git clean -i
+
+
+Ignorando arquivos para não serem rastreado pelo GIT (Log,dll,etc):
+Criar um arquivo chamado ".gitignore", dentro do arquivo colocar os arquivos ou pastas que não quer que o GIT rastreie.
+Ex: *.exe
+    *.log
+    *.java	
+
+Caso o arquivo já esteja sendo rastreado e deseja ignorá-lo.
+
+Remove todos os arquivos do rastreamento:
+	$ git rm -r --cached .
+	$ git commit -m "Arrumando arquivos que não devem ser versionados"
+
+
+
+CLONANDO PROJETOS/REPOSITORIOS
+
+	Criar uma pasta, acessá-la com cd. Execudar comando "git clone <url/path>" - todo o repositório, inclusive as Branch serão baixadas.
+Exemplo	$ git clone /home/gcosta/Documents/Cursos/Git/projetos/
+
+	Com o comando "git log" podemos ver que além dos arquivos foi clonado todo o histórico do projeto.
+
+
+
+FALANDO DO GITHUB
+https://github.com
+Possível criar conta free, porém os repositórios criados na conta free serão públicos.
+
+Após criar uma conta no GitHub crie um novo Repositório git.
+pegue a url desse novo repositório e baixe-o em seu computador:
+	$ git clone https://github.com/guilherme-ac/cursogitguilherme.git
+
+Acesse a pasta de o comando "git status" e veja que está na Banch master.
+Crie um arquivo "touch teste".
+Ratreio o arquivo: $ git add teste.txt
+Comita a anteração: $ git commit -m "Versionamento inicial"
+
+Para enviar as alterações para o Servidor usamos o "git push".  Toda a configuração do push está em .git/config
+	$ git push
+
+Obs: $ git push origin master
+
+Acesse o arquivo no servidor github para ver que o arquvo já está lá.
+No servidor github faça uma alteração do arquivo e dê o commit.
+
+Agora atualize o repositório local:
+	$ git pull
+
+
+
+____________________________________________________
+
+BITBUCKET - Repositórios privados com contas gratuítas
+
+____________________________________________________
+
+
+CONCEITOS DE BRANCH
+Branch MASTER é a padrão criada pelo GIT. Ela é a versão final do "site/aplicação".
+
+É uma boa prática desenvolver em outra Branch que podemos chamar de "develop". No git podemos criar quantas Branch quisermos, por exemplo, uma branch por desenvolvedor. Cria-se as Branch dos desenvolvedores a partir da branch Develop.
+
+Diagrama ideal de Branch:
+
+Master > Developer	> Dev1
+			> Dev2
+			> DevN
+
+
+_________________________________________________________
+
+Criando Branch
+	$ git branch develop
+
+
+Listar as Branch (O * mostra qual Branch estamos)
+	$ git branch
+
+Trocar de branch:
+	$ git checkout develop
+
+Criar e já usar a nova branch
+	$ git checkout -b TASK-1
+
+Faças algumas anterações nessa nova branch e depois tente subi-la para o servidor github:
+	$ git push
+
+Vai informar que não existe essa bransh lá no servidor github. Use o seguinte comando para enviar o repositório e já criar a branch:
+	$ git push --set-upstream origin develop   OU   $ git push -u origin develop
+
+Esse comando cria uma bransh com nome develop no servidor remoto. Poderia usar qualquer nome, mas por organização costuma-se usar o mesmo. a branch remota será mapeada com a branch local.
+
+____________________________________________________________
+
+Caso tente trocar de Branch sem dar o "Commit" o git não vai permitir a troca de branch. Desfaça as alterações ou dê o Commit:
+	$ git reset --hard ou $ git commit -a -m "<mensagem>"
+
+
+
+
+
+____________________________________________________________
+
+
+
+RENOMEANDO BRANCH LOCAL
+Criando uma granch a partir da outra
+	$ git checkout -b super-funcionalidade
+
+Estando na branch que quer renomear utilize o sequinte comando:
+	$ git branch -m super-func
+
+Trocar o nome da branch estando em outra branch:
+	$ git branch -m super-func super-funcionalidade
+
+
+RENOMEANDO BRANCH REMOTA 
+	Garanta que sua cópia estava fiel do servidor
+	$ git pull
+	
+	Renomei a branch local
+*	$ git branch -m super-func
+	
+	Apaga a branch antiga no servidor
+	$ git push origin --delete super-funcionalidade
+
+	Envia a branch renomeada
+	$ git push -u origin super-func	
+
+
+________________________________________
+
+Diferença nos comando "git push origem <branch_name>" e "git push -u origem <branch_name>"
+Se utilizar o -u você já diz para o git criar a branch no servidor e mapear à branch local
+
+Caso tenha feito o push sem a opção "-u", na hora de baixar com o pull vai dizer que sua branch não está rastreada.
+ 
+Para baixar a branch em questão utilize:
+	Baixa os arquivos do servidor para a branch func1
+	$ git pull origin func1
+
+Caso queira arrumar o rastreamento faça:
+	$ git branch --set-upstream-to=origin/<branch_remota> <branch_local>
+
+
+__________________________________________
+
+CRIANDO BRANCH SIMULANDO 2 DESENVOLVEDORES
+
+O desenvolvedor 1 cria uma branch no repositório local e envia para o servidor:
+	$ git branch task-1
+	$ git push -u origin task-1   # envia a branch para o servidor
+
+O desenvolvedor 2 cria uma branch em seu repositório local e tbm envia para o servidor:
+	$ git branch task-2
+	$ git push -u origin task-2   # envia a branch para o servidor
+
+Quando o desenvolvedor 1 for acessar a branch task-2 não vai conseguir pois ainda não está em seu repositório local então deve-se fazer um git pull para atualizar o repo local:
+	$ git pull
+	$ git checkout task-2
+	
+
+
+
+____________________________________________
+MESCLANDO BRANCH na MASTER
+
+Acesse a branch master e dê o comando merge passando a branch que quer trazer pra master:
+	$ git checkout master
+	$ git merge develop
+
+____________________________________________
+Removendo uma branch do seu computador:
+	$ git branch -d <nome_da_branch>
+
+Listar branch remotas:
+	$ git branch -r
+
+Lista branch locais e remotas:
+	$ git branch -a
+
+Recuperando do servidor a branch apagada:
+	$ git branch <Nome_da_branch_no_servidor>
+
+
+Exemplo excluindo Branch locais:
+	$ git checkout develop   # saia da branch que vai deletar indo para outra.
+	$ git branch -d TASK-1   # Deleta a branch TASK-1  - use o -D para forçar remoção da branch local.
+
+
+
+
+
+
+APAGANDO BRANCH DO SERVIDOR
+Quando apagamos uma branch local e realizamos o push, não apagamos a branch remota. Observação: quando for apagar Branch remota aliar com a equipe de desenvolvimento, garanta que ninguem mais esteja usando a Branch localmente.
+
+Criando e já entrando em uma nova branch local:
+	$ $ git checkout -b funcionalidade1         # este comendo é o mesmo que fizer "git branch funcionalidade1" e depois "git checkout funcionalidade1"
+	
+Enviando nova branch para o servidor:
+	$ git push origin funcionalidade1
+
+Realize alguma alteração em algum arquivo
+Removendo a branch funcionalidade1 local e do servidor:
+	$ git branch -d funcionalidade1
+
+Caso dê erro por estar logado na branch, saia dela e repita o comando:
+	$ git checkout develop
+
+Por haver alterações e não tê-las enviado para o servidor, o git vai reclamar. Mas caso tenha certeza de que quer excluir a branch use a opção "-D".
+	$ git branch -D funcionalidade1
+
+Outra opção é fazer o menge para a outra branch
+	$ git merge funionalidade1
+
+Agora pode-se apagar a banch local:
+	$ git branch -d funcionalidade1
+
+E podemos apagar a branch do servidor:
+	$ git push origin --delete funcionalidade1
+
+
+POSSIVEIS CONFLITOS DE MERGE
+Para evitar conflitos no push, faça sempre o "git pull" na master antes de fazer o push
+
+
+
+
+############### Comando úteis ########################
+
+Inspecionando um Remoto
+Se você quer ver mais informação sobre algum remoto em particular, você pode usar o comando git remote show [nome-remoto]. Se você rodar este comando com um nome específico, como origin, você verá algo assim: ex: git remote show origin
+
+
+
+
+#############   GIT FCM   #######################
+No usuário local da pessoal crie a chave para ssh. Acesse o gitlab e em Settings procure por SSH Key. Adicione a Chave publica.
+A configuração do git local deve conter o usuario git@143.106.46.8:<projeto>
+
+
+#################################################
+
+Cenário ideal:
+
+Master > Developer > Branch de desenvolvimento.
+
+A branch Master é o ambiente de Produção > A Branch Developer é onde todas as Branches dos desenvolvedores se encontram (Homologação)
+Cada desenvolvedor usa usa branch e depois mergian na Branch Developer.
+
+
+
+##################################################
+
+Pull request é a solicitação de revisão antes de acontecer o Merge > Geralmente um desenvolverdor fazer o Pull requeste e outro desenvolvedor Confirma e realiza o Merge.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Referencias
+https://git-scm.com/book/pt-br/v1
+
+
+
+
+
+
+
+
